@@ -2,6 +2,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { mongoose } from 'mongoose';
 
+import authRouter from './routes/auth.routes.js'
+
 dotenv.config();
 
 mongoose.connect(process.env.MONGODB_URL).then(() => {
@@ -11,7 +13,11 @@ mongoose.connect(process.env.MONGODB_URL).then(() => {
 });
 
 const app = express();
+app.use(express.json());
 
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
+app.use('/api/auth', authRouter);
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`serve at http://localhost:${port}`)
 });
