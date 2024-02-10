@@ -19,7 +19,7 @@ export const addProduct = async (req, res, next) => {
     }
 };
 
-export const getllProduct = async (req, res, next) => {
+export const getAllProduct = async (req, res, next) => {
     try {
         const product = await Product.find();
         res.status(200).json({ product, nbHits: product.length })
@@ -27,4 +27,18 @@ export const getllProduct = async (req, res, next) => {
         next(error);
     }
 };
+
+export const getProduct = async (req, res, next) => {
+    try {
+        const product = await Product.findById(req.params.id);
+        if (product) {
+            res.send(product);
+        } else {
+            res.status(404)
+                .message({ message: "Product not found" });
+        }
+    } catch (error) {
+        next(error);
+    }
+}
 
