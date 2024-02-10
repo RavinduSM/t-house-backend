@@ -1,5 +1,5 @@
 import Product from "../models/productModel.js";
-import errorHandler from "../utils/error.js";
+import { errorHandler } from "../utils/error.js";
 
 // image Upload
 import multer from "multer";

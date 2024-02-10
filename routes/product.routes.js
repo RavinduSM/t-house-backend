@@ -1,14 +1,12 @@
 import express from 'express';
 import { addProduct, deleteProduct, getAllProduct, getProduct, productReview, updateProduct, upload } from '../controllers/product.controller.js';
-import { authenticate } from '../middlewares/authMiddleware.js';
 import checkId from '../middlewares/checkId.js';
-// import { addReview, getAllReviews } from '../controllers/review.controller.js';
-
+import { verifyToken } from '../utils/verifyUser.js';
 
 const router = express.Router();
 // user routers
 router.post("/add",
-    // authenticate,
+    //  verifyToken,
     addProduct);
 router.get('/', getAllProduct);
 
@@ -18,7 +16,7 @@ router.put('/:id', updateProduct);
 router.delete('/:id', deleteProduct);
 
 router.post("/:id/reviews",
-    // authenticate, 
+    verifyToken,
     checkId, productReview);
 
 // Review Url and Controller
