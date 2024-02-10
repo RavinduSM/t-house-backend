@@ -6,7 +6,7 @@ import multer from "multer";
 import path from 'path';
 
 export const addProduct = async (req, res, next) => {
-    console.log(req.body)
+    // console.log(req.body)
     try {
         const product = new Product({
             productName: req.body.productName,
