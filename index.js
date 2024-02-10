@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import { mongoose } from 'mongoose';
+// import bodyParser from 'body-parser';
 
 import authRouter from './routes/auth.routes.js';
 import productRouter from './routes/product.routes.js';
@@ -15,6 +16,15 @@ mongoose.connect(process.env.MONGODB_URL).then(() => {
 
 const app = express();
 app.use(express.json());
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded());
+
+// app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }))
+
+//static Images Folder
+
+app.use('/Images', express.static('./Images'))
 
 app.use('/api/auth', authRouter);
 app.use('/api/product', productRouter);
