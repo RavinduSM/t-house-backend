@@ -1,7 +1,12 @@
 import Product from "../models/productModel.js";
 import errorHandler from "../utils/error.js";
 
+// image Upload
+import multer from "multer";
+import path from 'path';
+
 export const addProduct = async (req, res, next) => {
+    console.log(req.body)
     try {
         const product = new Product({
             productName: req.body.productName,
@@ -12,6 +17,7 @@ export const addProduct = async (req, res, next) => {
             stock: req.body.stock,
             description: req.body.description,
             image: req.body.image,
+
         })
         const createProduct = await product.save()
         res.send({ message: "Product added", product: createProduct });
@@ -22,7 +28,7 @@ export const addProduct = async (req, res, next) => {
 
 export const getAllProduct = async (req, res, next) => {
     try {
-        const product = await Product.find();
+        const product = await Product.find(req.query); //req.quey to get filter options
         res.status(200).json({ product, nbHits: product.length })
     } catch (error) {
         next(error);
@@ -80,3 +86,29 @@ export const deleteProduct = async (req, res, next) => {
         return next(error);
     }
 }
+
+//Upload Image Controller
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'Images')
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname))
+    }
+})
+
+export const upload = multer({
+    storage: storage,
+    limits: { fileSize: '1000000' },
+    fileFilter: (req, file, cb) => {
+        const fileTypes = /jpeg|jpg|png|gif/
+        const mimeType = fileTypes.test(file.mimetype)
+        const extname = fileTypes.test(path.extname(file.originalname))
+
+        if (mimeType && extname) {
+            return cb(null, true)
+        }
+        cb('Give proper files formate to upload')
+    }
+}).single('image')
