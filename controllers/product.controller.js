@@ -15,8 +15,16 @@ export const addProduct = async (req, res, next) => {
         const createProduct = await product.save()
         res.send({ message: "Product added", product: createProduct });
     } catch (error) {
-        console.log(error.message);
-        res.status(500).send({ message: error.message });
+        next(error);
+    }
+};
+
+export const getllProduct = async (req, res, next) => {
+    try {
+        const product = await Product.find();
+        res.status(200).json({ product, nbHits: product.length })
+    } catch (error) {
+        next(error);
     }
 };
 
