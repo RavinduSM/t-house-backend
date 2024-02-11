@@ -6,7 +6,7 @@ import { verifyToken } from '../utils/verifyUser.js';
 const router = express.Router();
 // user routers
 router.post("/add",
-    //  verifyToken,
+    verifyToken,
     addProduct);
 router.get('/', getAllProduct);
 

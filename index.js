@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import { mongoose } from 'mongoose';
+import cors from 'cors';
 // import bodyParser from 'body-parser';
 
 import authRouter from './routes/auth.routes.js';
@@ -16,6 +17,25 @@ mongoose.connect(process.env.MONGODB_URL).then(() => {
 
 const app = express();
 app.use(express.json());
+// Enable cors at the server side. 
+
+const corsOption = {
+    origin: ['http://localhost:3000'],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+}
+app.use(cors(corsOption));
+
+
+
+
+// app.use(function (req, res, next) {
+//     res.header('Access-Control-Allow-Origin', "http://localhost:8000");
+//     res.header('Access-Control-Allow-Headers', true);
+//     res.header('Access-Control-Allow-Credentials', true);
+//     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+//     next();
+// });
 // app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded());
 
@@ -30,9 +50,9 @@ app.use('/api/auth', authRouter);
 app.use('/api/product', productRouter);
 
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
 app.listen(port, () => {
-    console.log(`serve at http://localhost:${port}`)
+    console.log(`serve at https://localhost:${port}`)
 });
 
 app.use((err, req, res, next) => {
