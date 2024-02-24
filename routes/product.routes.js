@@ -1,5 +1,5 @@
 import express from 'express';
-import { addProduct, deleteProduct, getAllProduct, getProduct, productReview, updateProduct, upload } from '../controllers/product.controller.js';
+import { addProduct, deleteProduct, getAllProduct, getProduct, getProductReviews, productReview, updateProduct, upload } from '../controllers/product.controller.js';
 import checkId from '../middlewares/checkId.js';
 import { verifyToken } from '../utils/verifyUser.js';
 
@@ -12,6 +12,8 @@ router.get('/', getAllProduct);
 
 // Product routers
 router.get('/:id', getProduct);
+router.post('/:id/reviews', productReview);
+router.get('/:id/reviews', getProductReviews);
 router.put('/:id', updateProduct);
 router.delete('/:id', deleteProduct);
 

@@ -6,6 +6,7 @@ import cors from 'cors';
 
 import authRouter from './routes/auth.routes.js';
 import productRouter from './routes/product.routes.js';
+import messageRouter from './routes/message.Routes.js';
 
 dotenv.config();
 
@@ -48,6 +49,7 @@ app.use('/Images', express.static('./Images'))
 
 app.use('/api/auth', authRouter);
 app.use('/api/product', productRouter);
+app.use('/api/message', messageRouter);
 
 
 const port = process.env.PORT || 8000;

@@ -4,11 +4,8 @@ const reviewSchema = mongoose.Schema({
     name: { type: String, required: true, },
     rating: { type: Number, required: true },
     comment: { type: String, required: true },
-    user: {
-        type: String,
-        required: true,
-        //   ref: "User",
-    },
+    email: { type: String, },
+    createdAt: { type: Date, default: Date.now },
 },
     { timestamps: true }
 );

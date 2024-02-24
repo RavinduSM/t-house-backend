@@ -91,26 +91,16 @@ export const deleteProduct = async (req, res, next) => {
 
 export const productReview = async (req, res) => {
     try {
-        const { rating, comment, name, user } = req.body;
+        const { rating, comment, name, email } = req.body;
         const product = await Product.findById(req.params.id);
 
         if (product) {
-            const alreadyReviewed = product.reviews.find(
-                (r) => r.user.toString() === req.user._id.toString()
-            );
-
-            if (alreadyReviewed) {
-                res.status(400);
-                throw new Error("Product already reviewed");
-            }
-
             const review = {
-                // name: req.user.username,
-                name: name,
+                email,
+                name,
                 rating: Number(rating),
                 comment,
-                // user: req.user._id,
-                user: user,
+
             };
 
             product.reviews.push(review);
@@ -130,6 +120,20 @@ export const productReview = async (req, res) => {
         res.status(400).json(error.message);
     }
 };
+
+export const getProductReviews = async (req, res, next) => {
+    try {
+        const product = await Product.findById(req.params.id);
+        if (product) {
+            res.send(product.reviews);
+        } else {
+            res.status(404)
+                .message({ message: "Product not found" });
+        }
+    } catch (error) {
+        next(error);
+    }
+}
 
 
 //Upload Image Controller
