@@ -1,7 +1,7 @@
 import User from '../models/userModel.js'
 import bcryptjs from 'bcryptjs';
 import { errorHandler } from '../utils/error.js';
-import jwt from 'jsonwebtoken';
+import createToken from '../utils/createToken.js'
 
 export const signup = async (req, res, next) => {
     const { username, email, password } = req.body;
@@ -17,16 +17,28 @@ export const signup = async (req, res, next) => {
 
 export const signin = async (req, res, next) => {
     const { email, password } = req.body;
-    try {
-        const validUser = await User.findOne({ email });
-        if (!validUser) return next(errorHandler(404, 'User not found!'));
-        const validPassword = bcryptjs.compareSync(password, validUser.password);
-        if (!validPassword) return next(errorHandler(401, 'Wrong credentials!'));
-        const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
-        const { password: pass, ...rest } = validUser._doc; // Inorder to don't show the password to the user
-        res.cookie('access_token', token, { httpOnly: true })
-            .status(200).json(rest);
-    } catch (error) {
-        next(error);
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+        const isPasswordValid = await bcryptjs.compare(
+            password,
+            existingUser.password
+        );
+
+        if (isPasswordValid) {
+            createToken(res, existingUser._id);
+
+            res.status(201).json({
+                _id: existingUser._id,
+                username: existingUser.username,
+                email: existingUser.email,
+                isAdmin: existingUser.isAdmin,
+            });
+        } else {
+            res.status(401).json({ message: "Invalid Password" });
+        }
+    } else {
+        res.status(401).json({ message: "User not found" });
     }
+
 }

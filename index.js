@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import { mongoose } from 'mongoose';
 import cors from 'cors';
 // import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser'
+
 
 import authRouter from './routes/auth.routes.js';
 import productRouter from './routes/product.routes.js';
@@ -18,6 +20,9 @@ mongoose.connect(process.env.MONGODB_URL).then(() => {
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser())
+
+
 // Enable cors at the server side. 
 
 const corsOption = {
